@@ -1,5 +1,4 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
@@ -7,25 +6,34 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get('code')
 
   if (code) {
-    const cookieStore = cookies()
+    const response = NextResponse.redirect(new URL('/dashboard', request.url))
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
           get(name: string) {
-            return cookieStore.get(name)?.value
+            return request.headers.get('cookie')?.split('; ').find(row => row.startsWith(`${name}=`))?.split('=')[1]
           },
-          set(name: string, value: string, options: any) {
-            cookieStore.set({ name, value, ...options })
+          set(name: string, value: string, options: CookieOptions) {
+            response.cookies.set({
+              name,
+              value,
+              ...options,
+            })
           },
-          remove(name: string, options: any) {
-            cookieStore.set({ name, value: '', ...options })
+          remove(name: string, options: CookieOptions) {
+            response.cookies.set({
+              name,
+              value: '',
+              ...options,
+            })
           },
         },
       }
     )
     await supabase.auth.exchangeCodeForSession(code)
+    return response
   }
 
   return NextResponse.redirect(new URL('/dashboard', request.url))

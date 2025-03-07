@@ -18,7 +18,7 @@ export async function createLead(lead: Omit<Lead, 'id' | 'created_at' | 'updated
     .from('leads')
     .insert([{
       ...lead,
-      created_by: lead.added_by
+      added_by: lead.added_by
     }])
     .select()
     .single()
@@ -26,7 +26,7 @@ export async function createLead(lead: Omit<Lead, 'id' | 'created_at' | 'updated
   if (error) throw error
   return {
     ...data,
-    added_by: data.created_by
+    added_by: data.added_by
   }
 }
 
@@ -35,7 +35,7 @@ export async function updateLead(id: string, updates: Partial<Lead>): Promise<Le
     .from('leads')
     .update({
       ...updates,
-      created_by: updates.added_by
+      added_by: updates.added_by
     })
     .eq('id', id)
     .select()
@@ -44,7 +44,7 @@ export async function updateLead(id: string, updates: Partial<Lead>): Promise<Le
   if (error) throw error
   return {
     ...data,
-    added_by: data.created_by
+    added_by: data.added_by
   }
 }
 

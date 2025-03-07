@@ -1,32 +1,49 @@
-export type UserRole = 'admin' | 'write' | 'read'
+export enum UserRole {
+  Admin = 'admin',
+  Write = 'write',
+  Read = 'read'
+}
 
-export type LeadStage = 'Lead' | 'To Pitch' | 'Pitched'
+export enum LeadStage {
+  Lead = 'Lead',
+  ToPitch = 'To Pitch',
+  Pitched = 'Pitched',
+  Onboarded = 'Onboarded'
+}
+
+export enum LeadStatus {
+  Active = 'Active',
+  Onboarded = 'Onboarded',
+  Failed = 'Failed'
+}
+
+export interface TimelineEntry {
+  timestamp: string
+  description: string,
+  next_approach_date?: string
+  is_converted?: boolean
+}
 
 export interface Lead {
   id: string
   name: string
   category: string[]
-  image_url?: string
   acp: number
   location: string
   area: string
-  note?: string
   instagram_account?: string
   competitor_apps_discount?: string
-  branches: string
+  branches?: string
+  image_url?: string
   stage: LeadStage
-  status: string
+  status: 'Active' | 'Inactive'
+  added_by: string
+  assigned_to?: string
+  approved_by?: string
+  response_rating?: number
+  timeline: TimelineEntry[]
   created_at: string
   updated_at: string
-  spoc_name?: string
-  spoc_number?: string
-  spoc_designation?: string
-  response_rating?: number
-  next_approach_date?: string
-  number_of_attempts?: number
-  created_by: string
-  approved_by?: string
-  approved_at?: string
 }
 
 export interface UserRoleData {

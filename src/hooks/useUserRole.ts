@@ -4,19 +4,26 @@ import { UserRole } from '@/types'
 import toast from 'react-hot-toast'
 
 export function useUserRole() {
-  const [role, setRole] = useState<UserRole>('read')
+  const [role, setRole] = useState<UserRole>(UserRole.Read)
   const [loading, setLoading] = useState(true)
   const supabase = createClient()
 
   useEffect(() => {
     const getUserRole = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser()
+        console.log('Getting user role...')
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        if (userError) {
+          console.error('Error getting user:', userError)
+          toast.error('Failed to get user information')
+          return
+        }
         if (!user) {
           console.log('No user found')
           return
         }
 
+        console.log('User found:', user.email)
         // First try to get existing role
         const { data: roleData, error: fetchError } = await supabase
           .from('user_roles')
@@ -67,6 +74,7 @@ export function useUserRole() {
         toast.error('Error setting up user role')
       } finally {
         setLoading(false)
+        console.log('User role loading complete:', { role, loading: false })
       }
     }
 

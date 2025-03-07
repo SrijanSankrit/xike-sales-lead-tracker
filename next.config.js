@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  images: {
+    domains: ['elpritxbjvoilvbbdgbw.supabase.co', 'via.placeholder.com'],
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
 }
 
-module.exports = nextConfig 
+module.exports = nextConfig

@@ -304,7 +304,7 @@ export default function Dashboard() {
               </div>
               <Button
                 onClick={handleSignOut}
-                className="bg-white text-black border border-red-500 hover:bg-gray-50"
+                className="bg-white text-red-500 border border-red-500 hover:bg-gray-50"
               >
                 Log out
               </Button>
